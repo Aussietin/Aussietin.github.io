@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Austin Crozier</title>
+<meta name="description" content="Austin Crozier — projects and things I build.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="hero">
+  <h1>Hi, I'm Austin. I build stuff.</h1>
+  <p class="lede">
+    Precision ag tech &amp; IT sysadmin by day, in Mackay QLD. Outside of that:
+    code, robotics, 3D printing, and homelab tinkering — mostly because I like
+    figuring out how things work by building my own version of them.
+  </p>
+</header>
+
+<main>
+  <section class="projects">
+
+    <article class="card">
+      <h2>AB Line Evolve</h2>
+      <p class="tagline">A tractor teaches itself to steer.</p>
+      <p>
+        A browser idle game where a paddock's worth of tractors learn to
+        autosteer along a guidance line — a mutate-the-champion genetic
+        algorithm, no gradient descent, no training data. "AB Line" is the
+        real industry term for a guidance line in autosteer systems
+        (John Deere and friends), not generic racing-game naming.
+      </p>
+      <p class="highlight">
+        Watching it actually learn was the fun part — fitness climbed
+        288 → 660 over 64 generations, then plateaued at a genuine
+        local minimum right where the track gets hard.
+      </p>
+      <p class="meta">TypeScript · Vite · Canvas2D</p>
+      <a class="link" href="https://github.com/Aussietin/abline-evolve">View on GitHub →</a>
+    </article>
+
+    <article class="card">
+      <h2>Tray-indicators</h2>
+      <p class="tagline">A tiny platform for Windows tray status lights.</p>
+      <p>
+        A reusable harness for system-tray status icons: write one
+        <code>poll()</code> function that returns a state, and the harness
+        handles rendering, the right-click menu, and toast notifications.
+        Five lights run on it day to day — vault sync, dirty git repos,
+        a work timer, and a household hub.
+      </p>
+      <p class="highlight">
+        Redesigned the icons to a shape-per-app system (circle, square,
+        diamond, hexagon, house) after realising five similar-coloured
+        dots are impossible to tell apart at real tray size without
+        hovering over each one.
+      </p>
+      <p class="meta">Python · pystray · Pillow</p>
+      <a class="link" href="https://github.com/Aussietin/tray-indicators">View on GitHub →</a>
+    </article>
+
+    <article class="card">
+      <h2>3D Printing</h2>
+      <p class="tagline">Bambu A1 + FreeCAD — learning to design what I print.</p>
+      <p>
+        Picked up a Bambu A1 Combo in mid-2026. Started with the basics
+        (phone stand, a Raspberry Pi 5 case) and now learning FreeCAD to
+        design my own parts instead of just printing other people's —
+        robotics brackets and a cyberdeck build are next on the list.
+      </p>
+      <p class="meta">Bambu Studio · FreeCAD</p>
+    </article>
+
+  </section>
+</main>
+
+<footer>
+  <p>More on <a href="https://github.com/Aussietin">GitHub</a>.</p>
+</footer>
+
+</body>
+</html>
