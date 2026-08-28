@@ -9,8 +9,13 @@
 </head>
 <body>
 
+<header class="site-header">
+  <span class="prompt">&gt;_</span>
+  <span class="site-name">austin crozier</span>
+</header>
+
 <header class="hero">
-  <h1>Hi, I'm Austin. I build stuff.</h1>
+  <h1>Hi, I'm Austin. I <span class="accent">build</span> stuff.</h1>
   <p class="lede">
     Precision ag tech &amp; IT sysadmin by day, in Mackay QLD. Outside of that:
     code, robotics, 3D printing, and homelab tinkering — mostly because I like
@@ -19,7 +24,66 @@
 </header>
 
 <main>
-  <section class="projects">
+  <section class="projects-section">
+    <p class="section-label">projects</p>
+    <div class="projects">
+
+    <article class="card">
+      <h2>nethealth</h2>
+      <p class="tagline">A network health monitor that lives in your terminal.</p>
+      <p>
+        One-shot checks, a live monitoring TUI, speed tests, and history
+        reports — no browser, no server, no setup friction. DNS, ping, HTTP,
+        port, and SSL checks per target, plus traceroute and a packet
+        sniffer for when things actually break.
+      </p>
+      <p class="highlight">
+        The status table tells "reachable" from "healthy" apart —
+        an HTTP check that connects but returns a 4xx/5xx shows red, not
+        green, instead of quietly lying to you at a glance.
+      </p>
+      <p class="meta">Python · Click · Textual</p>
+      <a class="link" href="https://github.com/Aussietin/nethealth">View on GitHub →</a>
+    </article>
+
+    <article class="card">
+      <h2>tray-indicators</h2>
+      <p class="tagline">A tiny platform for Windows tray status lights.</p>
+      <p>
+        A reusable harness for system-tray status icons: write one
+        <code>poll()</code> function that returns a state, and the harness
+        handles rendering, the right-click menu, and toast notifications.
+        Five lights run on it day to day — vault sync, dirty git repos,
+        a work timer, and a household hub.
+      </p>
+      <p class="highlight">
+        Redesigned the icons to a shape-per-app system (circle, square,
+        diamond, hexagon, house) after realising five similar-coloured
+        dots are impossible to tell apart at real tray size without
+        hovering over each one.
+      </p>
+      <p class="meta">Python · pystray · Pillow</p>
+      <a class="link" href="https://github.com/Aussietin/tray-indicators">View on GitHub →</a>
+    </article>
+
+    <article class="card">
+      <h2>flowtype</h2>
+      <p class="tagline">Hold-to-talk dictation, fully on-device.</p>
+      <p>
+        A Wispr Flow clone with no subscription and no audio ever leaving
+        the machine — transcription runs locally via faster-whisper. Hold
+        Caps Lock, speak, release, and the transcript pastes wherever your
+        cursor is.
+      </p>
+      <p class="highlight">
+        An optional local-LLM cleanup pass is honestly documented as
+        unreliable for its one motivating case (fixing "cloud code" back to
+        "Claude Code") — off by default, because a feature that mostly
+        works isn't worth shipping on by default.
+      </p>
+      <p class="meta">Python · faster-whisper · Windows</p>
+      <a class="link" href="https://github.com/Aussietin/flowtype">View on GitHub →</a>
+    </article>
 
     <article class="card">
       <h2>AB Line Evolve</h2>
@@ -41,38 +105,6 @@
     </article>
 
     <article class="card">
-      <h2>Tray-indicators</h2>
-      <p class="tagline">A tiny platform for Windows tray status lights.</p>
-      <p>
-        A reusable harness for system-tray status icons: write one
-        <code>poll()</code> function that returns a state, and the harness
-        handles rendering, the right-click menu, and toast notifications.
-        Five lights run on it day to day — vault sync, dirty git repos,
-        a work timer, and a household hub.
-      </p>
-      <p class="highlight">
-        Redesigned the icons to a shape-per-app system (circle, square,
-        diamond, hexagon, house) after realising five similar-coloured
-        dots are impossible to tell apart at real tray size without
-        hovering over each one.
-      </p>
-      <p class="meta">Python · pystray · Pillow</p>
-      <a class="link" href="https://github.com/Aussietin/tray-indicators">View on GitHub →</a>
-    </article>
-
-    <article class="card">
-      <h2>3D Printing</h2>
-      <p class="tagline">Bambu A1 + FreeCAD — learning to design what I print.</p>
-      <p>
-        Picked up a Bambu A1 Combo in mid-2026. Started with the basics
-        (phone stand, a Raspberry Pi 5 case) and now learning FreeCAD to
-        design my own parts instead of just printing other people's —
-        robotics brackets and a cyberdeck build are next on the list.
-      </p>
-      <p class="meta">Bambu Studio · FreeCAD</p>
-    </article>
-
-    <article class="card">
       <h2>PhotoSync</h2>
       <p class="tagline">A photo organiser that doesn't lose your only copy.</p>
       <p>
@@ -89,23 +121,7 @@
       <a class="link" href="https://github.com/Aussietin/PhotoSync">View on GitHub →</a>
     </article>
 
-    <article class="card">
-      <h2>GEOTRACK</h2>
-      <p class="tagline">Tracking GPS hardware across the properties I work on.</p>
-      <p>
-        A self-hosted asset manager for the RTK/GNSS survey hardware my day
-        job runs autosteer and field mapping off — lifecycle tracking,
-        firmware alerts, and replacement scoring for ~50 units, deployable
-        with zero internet dependency.
-      </p>
-      <p class="highlight">
-        Frontend prototype and design doc done; still working out the right
-        storage layer before the backend goes further.
-      </p>
-      <p class="meta">Node.js · Express · Vanilla JS</p>
-      <a class="link" href="https://github.com/Aussietin/GEOTRACK">View on GitHub →</a>
-    </article>
-
+    </div>
   </section>
 </main>
 
