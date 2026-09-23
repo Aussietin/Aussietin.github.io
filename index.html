@@ -297,7 +297,8 @@
       <div class="card"><span class="badge">public</span>
         <span class="tag">Desktop tool</span>
         <h3>flowtype</h3>
-        <p>Local hold-to-talk dictation — hold a key, speak, and the text lands wherever the cursor is. A Wispr Flow clone with no subscription and no cloud: no audio or text leaves the machine.</p>
+        <p>Hold Caps Lock, speak, release — the transcript pastes wherever your cursor is. A Wispr Flow clone with no subscription: transcription runs locally, no audio leaves the machine.</p>
+        <p class="note">The optional local-LLM cleanup pass is honestly documented as unreliable for its one motivating case, so it ships off by default.</p>
         <div class="stack"><span class="chip">Python</span><span class="chip">faster-whisper</span><span class="chip">Local-first</span></div>
         <a class="more" href="https://github.com/Aussietin/flowtype">View on GitHub →</a>
       </div>
@@ -305,7 +306,8 @@
         <span class="tag">Terminal tool</span>
         <h3>nethealth</h3>
         <p>A network-health monitor with a live TUI: per-target DNS, ping, HTTP and SSL checks, traceroute, speed tests and history reports.</p>
-        <div class="stack"><span class="chip">Python</span><span class="chip">Textual</span><span class="chip">CLI</span></div>
+        <p class="note">The status table tells "reachable" from "healthy" apart — an HTTP check that connects but returns a 4xx/5xx shows red, not green.</p>
+        <div class="stack"><span class="chip">Python</span><span class="chip">Click</span><span class="chip">Textual</span></div>
         <a class="more" href="https://github.com/Aussietin/nethealth">View on GitHub →</a>
       </div>
       <div class="card">
