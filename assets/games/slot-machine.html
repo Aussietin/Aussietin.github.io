@@ -1,0 +1,764 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LUCKY STRIKE</title>
+<style>
+  :root{
+    --bg:#0b0d0a; --panel:#0f140f; --p1:#39ff6a; --p1-dim:#1f7a3a;
+    --amber:#ffb000; --red:#ff3b3b; --ink:#0b0d0a; --gold:#ffd23f;
+  }
+  *{box-sizing:border-box}
+  html,body{ overflow-x:hidden; }
+  body{
+    margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+    background:radial-gradient(ellipse at center, #12160f 0%, var(--bg) 70%);
+    font-family:'JetBrains Mono', ui-monospace, Consolas, monospace;
+    color:var(--p1);
+    position:relative;
+  }
+  body.shake{ animation:shake .4s ease; }
+  body::after{
+    content:''; position:fixed; inset:0; pointer-events:none; z-index:40; opacity:.18;
+    background:repeating-linear-gradient(0deg, rgba(0,0,0,.32) 0 1px, transparent 1px 4px);
+    mix-blend-mode:multiply;
+  }
+  body.high-roller{ --bg:#12070c; --panel:#1b0912; --p1:#ff4fc3; --p1-dim:#8a275f; --amber:#64e8ff; --red:#ff764f; --ink:#10050b; --gold:#ffdf61; }
+  body.attract .cabinet{ animation:attractGlow 1.8s ease-in-out infinite alternate; }
+  body.attract h1{ animation:glitch .24s steps(2) infinite; }
+  @keyframes shake{
+    0%,100%{ transform:translate(0,0); }
+    20%{ transform:translate(-6px,3px); }
+    40%{ transform:translate(6px,-3px); }
+    60%{ transform:translate(-4px,4px); }
+    80%{ transform:translate(4px,-2px); }
+  }
+  .cabinet{
+    width:min(92vw, 480px);
+    border:2px solid var(--p1-dim);
+    border-radius:14px;
+    padding:20px;
+    background:linear-gradient(180deg, #0d120d, #090b08);
+    box-shadow:0 0 40px rgba(57,255,106,0.08), inset 0 0 30px rgba(0,0,0,0.6);
+    position:relative;
+    transition:box-shadow .3s;
+  }
+  .cabinet.jackpot{
+    box-shadow:0 0 80px rgba(255,210,63,0.55), inset 0 0 30px rgba(0,0,0,0.6);
+    border-color:var(--gold);
+  }
+  .cabinet.overcharged{ border-color:#64e8ff; box-shadow:0 0 70px rgba(100,232,255,.55), inset 0 0 30px rgba(0,0,0,.6); }
+  @keyframes attractGlow{ to{ box-shadow:0 0 70px rgba(255,176,0,.35), inset 0 0 30px rgba(0,0,0,.6); } }
+  @keyframes glitch{ 0%,100%{transform:translate(0)} 35%{transform:translate(2px,-1px);text-shadow:-2px 0 #ff3b3b,2px 0 #64e8ff} 70%{transform:translate(-2px,1px)} }
+  .topRow{ display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+  h1{
+    margin:0; letter-spacing:4px; font-size:20px; flex:1; text-align:center;
+    color:var(--amber); text-shadow:0 0 12px rgba(255,176,0,0.5);
+    animation:flicker 6s infinite;
+  }
+  @keyframes flicker{
+    0%,94%,97%,100%{ opacity:1; }
+    95%{ opacity:.6; }
+    96%{ opacity:.9; }
+  }
+  .iconBtn{
+    width:26px; height:26px; border-radius:50%; border:1px solid var(--p1-dim);
+    background:#0d1a0f; color:var(--p1); font-size:12px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; padding:0;
+  }
+  .iconBtn:hover{ background:#132615; }
+  .stats{
+    display:flex; justify-content:space-between; font-size:13px; margin-bottom:12px;
+    color:var(--p1); opacity:.85; flex-wrap:wrap; gap:4px;
+  }
+  .stats .best{ color:var(--gold); }
+  .stats .streak{ color:#64e8ff; }
+  .reels{
+    display:flex; gap:8px; background:var(--ink); border:1px solid var(--p1-dim);
+    border-radius:8px; padding:10px; margin-bottom:14px; position:relative;
+  }
+  .reels.anticipate{ animation:pulseBorder .5s infinite alternate; }
+  @keyframes pulseBorder{
+    from{ border-color:var(--p1-dim); }
+    to{ border-color:var(--gold); box-shadow:0 0 18px rgba(255,210,63,.4); }
+  }
+  .reel{
+    flex:1; height:90px; overflow:hidden; position:relative;
+    background:#050705; border-radius:6px; border:1px solid rgba(57,255,106,0.15);
+  }
+  .reel.winning{ box-shadow:inset 0 0 0 2px var(--gold); animation:glow 0.6s infinite alternate; }
+  @keyframes glow{
+    from{ box-shadow:inset 0 0 0 2px var(--gold); }
+    to{ box-shadow:inset 0 0 12px 2px var(--gold); }
+  }
+  .reel .strip{
+    position:absolute; left:0; top:0; width:100%;
+    display:flex; flex-direction:column; align-items:center;
+  }
+  .reel .sym{
+    height:90px; display:flex; align-items:center; justify-content:center;
+    font-size:44px; line-height:1;
+  }
+  .payline{
+    position:absolute; left:10px; right:10px; top:50%; height:2px;
+    background:var(--red); opacity:.5; transform:translateY(-1px); pointer-events:none;
+  }
+  .controls{ display:flex; gap:10px; align-items:center; }
+  button{
+    font-family:inherit; cursor:pointer; border-radius:6px; border:1px solid var(--p1-dim);
+    background:#0d1a0f; color:var(--p1); padding:10px 14px; font-size:13px;
+    letter-spacing:1px;
+  }
+  button:hover:not(:disabled){ background:#132615; }
+  button:disabled{ opacity:.4; cursor:not-allowed; }
+  .spin-btn{
+    flex:1; font-size:15px; padding:14px; color:var(--ink); background:var(--amber);
+    border-color:var(--amber); font-weight:bold; position:relative; overflow:hidden;
+  }
+  .spin-btn:hover:not(:disabled){ background:#ffc233; }
+  .spin-btn.auto{ background:var(--gold); border-color:var(--gold); }
+  .bet-row{ display:flex; gap:6px; }
+  .message{
+    text-align:center; min-height:20px; margin:10px 0 4px; font-size:13px;
+    color:var(--amber); letter-spacing:1px;
+  }
+  .footer{
+    text-align:center; margin-top:10px; font-size:10px; opacity:.4; letter-spacing:1px;
+  }
+  .footer button{
+    background:none; border:none; color:var(--p1); opacity:.7; text-decoration:underline;
+    font-size:10px; padding:0; letter-spacing:1px; cursor:pointer;
+  }
+  .lever{
+    width:34px; height:90px; border-radius:8px; border:1px solid var(--p1-dim);
+    background:#0d1a0f; position:relative; cursor:pointer; flex-shrink:0;
+  }
+  .lever .knob{
+    position:absolute; left:50%; top:8px; width:22px; height:22px; border-radius:50%;
+    background:var(--red); transform:translateX(-50%); transition:top .25s ease;
+    box-shadow:0 0 8px rgba(255,59,59,.6);
+  }
+  .lever.pulled .knob{ top:60px; }
+  .cabRow{ display:flex; gap:10px; align-items:stretch; margin-bottom:10px; }
+  .free-badge{
+    display:none; text-align:center; font-size:12px; color:var(--gold); letter-spacing:1px;
+    margin-bottom:8px; text-shadow:0 0 8px rgba(255,210,63,.6);
+  }
+  .free-badge.show{ display:block; }
+  .reactor{
+    margin:-3px 0 10px; font-size:10px; letter-spacing:1px; text-align:center; color:#64e8ff;
+    display:flex; align-items:center; gap:7px;
+  }
+  .reactor-bar{ height:7px; flex:1; border:1px solid var(--p1-dim); border-radius:6px; overflow:hidden; background:#050705; }
+  .reactor-fill{ height:100%; width:0; background:linear-gradient(90deg,var(--p1),#64e8ff); transition:width .35s; box-shadow:0 0 9px #64e8ff; }
+  .reactor.hot .reactor-fill{ background:var(--gold); box-shadow:0 0 12px var(--gold); }
+  .mode-row{ display:flex; gap:8px; margin-top:8px; }
+  .modeBtn{ flex:1; font-size:11px; }
+  .modeBtn.high{ color:var(--ink); background:#ff4fc3; border-color:#ff4fc3; }
+
+  .modal-backdrop{
+    display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:20;
+    align-items:center; justify-content:center;
+  }
+  .modal-backdrop.show{ display:flex; }
+  .modal{
+    background:#0d120d; border:1px solid var(--p1-dim); border-radius:10px; padding:20px;
+    width:min(90vw, 340px); box-shadow:0 0 40px rgba(57,255,106,0.15);
+  }
+  .modal h2{ margin:0 0 10px; color:var(--amber); font-size:16px; letter-spacing:2px; }
+  .modal table{ width:100%; border-collapse:collapse; font-size:13px; }
+  .modal td{ padding:4px 0; border-bottom:1px solid rgba(57,255,106,0.1); }
+  .modal td:last-child{ text-align:right; color:var(--gold); }
+  .modal .close{ margin-top:14px; width:100%; }
+  .modal p{ font-size:11px; opacity:.7; line-height:1.5; }
+  .modal h3{ color:#64e8ff; font-size:12px; letter-spacing:1px; margin:14px 0 5px; }
+  .records{ font-size:11px; color:var(--gold); line-height:1.55; min-height:16px; }
+  .trophies{ font-size:10px; line-height:1.6; color:var(--p1); }
+  .trophy.locked{ opacity:.32; }
+  .win-banner{
+    position:fixed; left:50%; top:18%; transform:translate(-50%,-20px) scale(.8); z-index:35;
+    color:var(--gold); font-size:clamp(23px,7vw,38px); font-weight:bold; letter-spacing:3px;
+    text-shadow:0 0 8px #fff,0 0 22px var(--gold); opacity:0; pointer-events:none;
+  }
+  .win-banner.show{ animation:winPop 1.45s ease forwards; }
+  @keyframes winPop{ 10%{opacity:1;transform:translate(-50%,0) scale(1.12)} 70%{opacity:1;transform:translate(-50%,0) scale(1)} 100%{opacity:0;transform:translate(-50%,-22px) scale(.92)} }
+  .toast{ position:fixed; left:50%; bottom:20px; transform:translateX(-50%); z-index:45; color:var(--ink); background:var(--gold); padding:8px 12px; border-radius:4px; font-size:11px; letter-spacing:1px; opacity:0; pointer-events:none; }
+  .toast.show{ animation:toastIn 2.8s ease forwards; }
+  @keyframes toastIn{ 10%,85%{ opacity:1; transform:translate(-50%,-8px) } 100%{opacity:0} }
+  .vault-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:14px 0; }
+  .vault-pick{ height:64px; padding:4px; font-size:26px; background:#111d26; border-color:#64e8ff; }
+  .vault-pick.revealed{ background:#203d49; color:var(--gold); }
+
+  .confetti{
+    position:fixed; top:-10px; width:8px; height:14px; z-index:30; pointer-events:none;
+    animation:fall linear forwards;
+  }
+  @keyframes fall{
+    to{ transform:translateY(110vh) rotate(720deg); opacity:0.2; }
+  }
+</style>
+</head>
+<body>
+<div class="cabinet" id="cabinet">
+  <div class="topRow">
+    <button class="iconBtn" id="muteBtn" title="Toggle sound">🔊</button>
+    <h1>&gt;_ LUCKY STRIKE</h1>
+    <button class="iconBtn" id="modeBtn" title="Switch game mode">!</button>
+    <button class="iconBtn" id="payBtn" title="Paytable and records">?</button>
+  </div>
+  <div class="stats">
+    <span>CREDITS: <b id="credits">100</b></span>
+    <span>BET: <b id="betDisplay">5</b></span>
+    <span>WIN: <b id="lastWin">0</b></span>
+    <span class="best">BEST: <b id="bestWin">0</b></span>
+    <span class="streak">STREAK: <b id="streak">0</b></span>
+  </div>
+  <div class="free-badge" id="freeBadge">🍀 FREE SPINS: <span id="freeCount">0</span> — 2x MULTIPLIER 🍀</div>
+  <div class="reactor" id="reactor"><span>⚡ REACTOR</span><div class="reactor-bar"><div class="reactor-fill" id="reactorFill"></div></div><span id="reactorText">0/5</span></div>
+  <div class="cabRow">
+    <div class="reels" id="reels">
+      <div class="payline"></div>
+      <div class="reel" data-reel="0"><div class="strip"></div></div>
+      <div class="reel" data-reel="1"><div class="strip"></div></div>
+      <div class="reel" data-reel="2"><div class="strip"></div></div>
+    </div>
+    <div class="lever" id="lever" title="Pull!"><div class="knob"></div></div>
+  </div>
+  <div class="message" id="message">PULL THE LEVER OR HIT SPIN</div>
+  <div class="controls">
+    <div class="bet-row">
+      <button id="betDown">-</button>
+      <button id="betUp">+</button>
+    </div>
+    <button class="spin-btn" id="spinBtn">SPIN</button>
+    <button id="maxBtn">MAX</button>
+  </div>
+  <div class="controls" style="margin-top:8px">
+    <button id="autoBtn" style="flex:1">AUTOPLAY x10</button>
+    <button id="resetBtn">RESET</button>
+  </div>
+  <div class="mode-row"><button class="modeBtn" id="modeWideBtn">MODE: LUCKY STRIKE</button></div>
+  <div class="footer">phosphor-toys :: lucky-strike v0.3 :: no real money, obviously ·
+    <button id="creditBtn">credits</button>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="payModal">
+  <div class="modal">
+    <h2>PAYTABLE</h2>
+    <table>
+      <tr><td>🍒 🍒 🍒</td><td>x2 bet</td></tr>
+      <tr><td>🍋 🍋 🍋</td><td>x3 bet</td></tr>
+      <tr><td>🔔 🔔 🔔</td><td>x5 bet</td></tr>
+      <tr><td>⭐ ⭐ ⭐</td><td>x8 bet</td></tr>
+      <tr><td>💎 💎 💎</td><td>x15 bet</td></tr>
+      <tr><td>7️⃣ 7️⃣ 7️⃣</td><td>x40 bet</td></tr>
+      <tr><td>🍀 🍀 🍀</td><td>x25 bet + 5 FREE SPINS (2x)</td></tr>
+      <tr><td>🃏 (wild)</td><td>substitutes any symbol</td></tr>
+      <tr><td>any pair</td><td>x0.2 of the pair symbol's rate</td></tr>
+    </table>
+    <p>Wilds only appear during free spins. Free spins carry a 2x multiplier and
+      can re-trigger on another 🍀🍀🍀. This is a phosphor-toys throwaway — credits
+      reset to 100 any time from the footer link, no real money involved.</p>
+    <h3>NEON REACTOR</h3>
+    <p>⚡ charges the reactor. At 5 charges, your next win is doubled. Two 🛸 anywhere opens a vault pick. Winning streaks add up to a 2x combo multiplier.</p>
+    <h3>SESSION HALL OF FAME</h3>
+    <div class="records" id="records">No wins logged yet.</div>
+    <h3>TROPHIES</h3>
+    <div class="trophies" id="trophies"></div>
+    <button class="close" id="closePayModal">CLOSE</button>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="vaultModal">
+  <div class="modal">
+    <h2>🛸 SIGNAL VAULT</h2>
+    <p>A rift opened. Pick one cache before it closes.</p>
+    <div class="vault-grid" id="vaultGrid"></div>
+    <p id="vaultResult">Choose a cache.</p>
+  </div>
+</div>
+<div class="win-banner" id="winBanner"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  const NORMAL_SYMBOLS = ["🍒","🍋","🔔","⭐","💎","7️⃣","🍀","⚡","🛸"];
+  const HIGH_SYMBOLS = ["🍒","🔔","⭐","💎","7️⃣","🍀","⚡","🛸","👑"];
+  const WILD = "🃏";
+  const MODES = {
+    normal: { label:'LUCKY STRIKE', symbols:NORMAL_SYMBOLS, weights:[30,24,16,12,8,5,5,7,4], payouts:{"🍒":2,"🍋":3,"🔔":5,"⭐":8,"💎":15,"7️⃣":40,"🍀":25,"⚡":10,"🛸":12}, min:5, max:25 },
+    high: { label:'HIGH ROLLER // VOLTAGE', symbols:HIGH_SYMBOLS, weights:[20,17,14,10,7,5,5,8,5,3], payouts:{"🍒":2,"🔔":5,"⭐":9,"💎":18,"7️⃣":50,"🍀":30,"⚡":12,"🛸":15,"👑":80}, min:10, max:50 }
+  };
+  const SYM_H = 90;
+  const STORE_KEY = 'lucky-strike-save';
+
+  let credits = 100;
+  let bestWin = 0;
+  let bet = 5;
+  let freeSpins = 0;
+  let muted = false;
+  let autoSpinsLeft = 0;
+  let mode = 'normal';
+  let streak = 0;
+  let maxStreak = 0;
+  let reactorCharge = 0;
+  let overcharged = false;
+  let vaultsOpened = 0;
+  let recentWins = [];
+  let achievements = [];
+  let idleTimer;
+  const BET_STEP = 5;
+  const cfg = () => MODES[mode];
+
+  function loadSave(){
+    try{
+      const raw = localStorage.getItem(STORE_KEY);
+      if(!raw) return;
+      const data = JSON.parse(raw);
+      if(typeof data.credits === 'number') credits = data.credits;
+      if(typeof data.bestWin === 'number') bestWin = data.bestWin;
+      if(typeof data.bet === 'number') bet = data.bet;
+      if(typeof data.muted === 'boolean') muted = data.muted;
+      if(data.mode && MODES[data.mode]) mode = data.mode;
+      if(typeof data.streak === 'number') streak = data.streak;
+      if(typeof data.maxStreak === 'number') maxStreak = data.maxStreak;
+      if(typeof data.reactorCharge === 'number') reactorCharge = Math.min(5, data.reactorCharge);
+      if(typeof data.overcharged === 'boolean') overcharged = data.overcharged;
+      if(Array.isArray(data.recentWins)) recentWins = data.recentWins.slice(0,5);
+      if(Array.isArray(data.achievements)) achievements = data.achievements;
+    }catch(e){ /* corrupt or unavailable, start fresh */ }
+  }
+  function save(){
+    try{
+      localStorage.setItem(STORE_KEY, JSON.stringify({ credits, bestWin, bet, muted, mode, streak, maxStreak, reactorCharge, overcharged, recentWins, achievements }));
+    }catch(e){ /* storage unavailable, silently skip persistence */ }
+  }
+  loadSave();
+
+  const els = {
+    credits: document.getElementById('credits'),
+    betDisplay: document.getElementById('betDisplay'),
+    lastWin: document.getElementById('lastWin'),
+    bestWin: document.getElementById('bestWin'),
+    message: document.getElementById('message'),
+    spinBtn: document.getElementById('spinBtn'),
+    betUp: document.getElementById('betUp'),
+    betDown: document.getElementById('betDown'),
+    maxBtn: document.getElementById('maxBtn'),
+    lever: document.getElementById('lever'),
+    reelsWrap: document.getElementById('reels'),
+    cabinet: document.getElementById('cabinet'),
+    muteBtn: document.getElementById('muteBtn'),
+    payBtn: document.getElementById('payBtn'),
+    payModal: document.getElementById('payModal'),
+    closePayModal: document.getElementById('closePayModal'),
+    autoBtn: document.getElementById('autoBtn'),
+    resetBtn: document.getElementById('resetBtn'),
+    creditBtn: document.getElementById('creditBtn'),
+    freeBadge: document.getElementById('freeBadge'),
+    freeCount: document.getElementById('freeCount'),
+    streak: document.getElementById('streak'),
+    reactor: document.getElementById('reactor'),
+    reactorFill: document.getElementById('reactorFill'),
+    reactorText: document.getElementById('reactorText'),
+    modeBtn: document.getElementById('modeBtn'),
+    modeWideBtn: document.getElementById('modeWideBtn'),
+    records: document.getElementById('records'),
+    trophies: document.getElementById('trophies'),
+    vaultModal: document.getElementById('vaultModal'),
+    vaultGrid: document.getElementById('vaultGrid'),
+    vaultResult: document.getElementById('vaultResult'),
+    winBanner: document.getElementById('winBanner'),
+    toast: document.getElementById('toast'),
+  };
+
+  const reelDivs = [0,1,2].map(i => document.querySelector(`.reel[data-reel="${i}"]`));
+  const reelEls = reelDivs.map(d => d.querySelector('.strip'));
+
+  function weightedSymbol(){
+    const total = cfg().weights.reduce((a,b)=>a+b,0);
+    let r = Math.random()*total;
+    for(let i=0;i<cfg().symbols.length;i++){
+      if(r < cfg().weights[i]) return cfg().symbols[i];
+      r -= cfg().weights[i];
+    }
+    return cfg().symbols[0];
+  }
+
+  // during free spins, ~12% chance any given reel lands a wild instead
+  function weightedSymbolMaybeWild(){
+    if(freeSpins > 0 && Math.random() < 0.12) return WILD;
+    return weightedSymbol();
+  }
+
+  function buildStrip(finalSymbol, spins){
+    const seq = [];
+    for(let i=0;i<spins;i++) seq.push(weightedSymbol());
+    seq.push(finalSymbol);
+    return seq;
+  }
+
+  // Web Audio beeps, no assets
+  let actx;
+  function beep(freq=440, dur=0.08, type='square', vol=0.05){
+    if(muted) return;
+    try{
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      const o = actx.createOscillator();
+      const g = actx.createGain();
+      o.type = type; o.frequency.value = freq;
+      g.gain.value = vol;
+      o.connect(g); g.connect(actx.destination);
+      o.start();
+      g.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime + dur);
+      o.stop(actx.currentTime + dur + 0.02);
+    }catch(e){/* audio not available, ignore */}
+  }
+
+  function tickSound(){ beep(220 + Math.random()*80, 0.03, 'square', 0.03); }
+  function winSound(big){
+    [0,120,240].forEach((t,i)=>{
+      setTimeout(()=>beep(440 + i*220, 0.15, 'triangle', big?0.08:0.05), t);
+    });
+  }
+  function jackpotSound(){
+    [0,100,200,300,400].forEach((t,i)=>{
+      setTimeout(()=>beep(523 + i*110, 0.2, 'triangle', 0.09), t);
+    });
+  }
+  function loseSound(){ beep(120, 0.15, 'sawtooth', 0.04); }
+  function clickSound(){ beep(600, 0.03, 'square', 0.02); }
+
+  function setMessage(t){ els.message.textContent = t; }
+  function refreshStats(){
+    els.credits.textContent = credits;
+    els.betDisplay.textContent = bet;
+    els.bestWin.textContent = bestWin;
+    els.freeBadge.classList.toggle('show', freeSpins > 0);
+    els.freeCount.textContent = freeSpins;
+    els.streak.textContent = streak ? `${streak} (${streakMultiplier()}x)` : '0';
+    els.reactorFill.style.width = `${reactorCharge * 20}%`;
+    els.reactorText.textContent = overcharged ? 'OVERCHARGED!' : `${reactorCharge}/5`;
+    els.reactor.classList.toggle('hot', overcharged);
+    els.cabinet.classList.toggle('overcharged', overcharged);
+    document.body.classList.toggle('high-roller', mode === 'high');
+    els.modeWideBtn.textContent = `MODE: ${cfg().label}`;
+    els.modeWideBtn.classList.toggle('high', mode === 'high');
+    save();
+  }
+
+  function streakMultiplier(){ return 1 + Math.min(1, Math.floor(streak / 3) * .25); }
+  function showBanner(text){
+    els.winBanner.textContent = text;
+    els.winBanner.classList.remove('show'); void els.winBanner.offsetWidth;
+    els.winBanner.classList.add('show');
+  }
+  function toast(text){
+    els.toast.textContent = text;
+    els.toast.classList.remove('show'); void els.toast.offsetWidth;
+    els.toast.classList.add('show');
+  }
+  function unlock(id, label){
+    if(achievements.includes(id)) return;
+    achievements.push(id); toast(`TROPHY UNLOCKED: ${label}`); save();
+  }
+  function renderRecords(){
+    els.records.textContent = recentWins.length ? recentWins.map((w,i)=>`#${i+1} +${w.amount} ${w.mode}`).join('  ·  ') : 'No wins logged yet.';
+    const list = [
+      ['first-big','FIRST BLOOD — win 10x bet'], ['streak-five','HOT HAND — 5 win streak'],
+      ['vault-three','VAULT RAT — open 3 signal vaults'], ['high-crown','CROWNED — win 👑 in High Roller'],
+      ['overcharge','LIVE WIRE — cash an overcharge']
+    ];
+    els.trophies.innerHTML = list.map(([id,label])=>`<div class="trophy ${achievements.includes(id)?'':'locked'}">${achievements.includes(id)?'◈':'◇'} ${label}</div>`).join('');
+  }
+
+  function confettiBurst(){
+    const colors = ['#ffd23f','#39ff6a','#ff3b3b','#ffb000','#ffffff'];
+    for(let i=0;i<40;i++){
+      const d = document.createElement('div');
+      d.className = 'confetti';
+      d.style.left = Math.random()*100 + 'vw';
+      d.style.background = colors[Math.floor(Math.random()*colors.length)];
+      d.style.animationDuration = (1.2 + Math.random()*1.2) + 's';
+      d.style.animationDelay = (Math.random()*0.3) + 's';
+      document.body.appendChild(d);
+      setTimeout(() => d.remove(), 3000);
+    }
+  }
+
+  function screenShake(){
+    document.body.classList.add('shake');
+    setTimeout(() => document.body.classList.remove('shake'), 400);
+  }
+
+  function animateReel(stripEl, seq, delayMs, onDone){
+    stripEl.innerHTML = '';
+    seq.forEach(sym => {
+      const d = document.createElement('div');
+      d.className = 'sym';
+      d.textContent = sym;
+      stripEl.appendChild(d);
+    });
+    const totalHeight = seq.length * SYM_H;
+    const finalOffset = totalHeight - SYM_H;
+    stripEl.style.transition = 'none';
+    stripEl.style.top = '0px';
+    void stripEl.offsetHeight;
+    const duration = 900 + delayMs;
+    stripEl.style.transition = `top ${duration}ms cubic-bezier(.15,.85,.35,1)`;
+    stripEl.style.top = `-${finalOffset}px`;
+
+    let ticks = setInterval(tickSound, 60);
+    setTimeout(() => {
+      clearInterval(ticks);
+      onDone && onDone();
+    }, duration + 30);
+  }
+
+  let spinning = false;
+
+  function matches(a, b){
+    return a === b || a === WILD || b === WILD;
+  }
+
+  function doSpin(){
+    if(spinning) return;
+    resetIdle();
+    const usingFreeSpin = freeSpins > 0;
+    if(!usingFreeSpin && credits < bet){
+      setMessage('NOT ENOUGH CREDITS');
+      autoSpinsLeft = 0;
+      updateAutoBtn();
+      return;
+    }
+    spinning = true;
+    reelDivs.forEach(r => r.classList.remove('winning'));
+    if(!usingFreeSpin){
+      credits -= bet;
+    } else {
+      freeSpins--;
+    }
+    refreshStats();
+    els.spinBtn.disabled = true;
+    els.lever.classList.add('pulled');
+    setMessage(usingFreeSpin ? 'FREE SPIN...' : 'SPINNING...');
+
+    const results = [weightedSymbolMaybeWild(), weightedSymbolMaybeWild(), weightedSymbolMaybeWild()];
+
+    // anticipation: if reel 1 & 2 already match (or wild), flag reel 3 as a near-miss build-up
+    const anticipating = matches(results[0], results[1]) && results[0] !== undefined;
+    if(anticipating) els.reelsWrap.classList.add('anticipate');
+
+    let doneCount = 0;
+    results.forEach((sym, i) => {
+      const seq = buildStrip(sym, 18 + i*4);
+      const extraDelay = (i === 2 && anticipating) ? 400 : 0;
+      animateReel(reelEls[i], seq, i*220 + extraDelay, () => {
+        doneCount++;
+        if(doneCount === 3){
+          els.reelsWrap.classList.remove('anticipate');
+          evaluate(results, usingFreeSpin);
+        }
+      });
+    });
+  }
+
+  function continueRound(){
+    refreshStats();
+    if(freeSpins > 0){
+      setTimeout(doSpin, 900);
+    } else if(autoSpinsLeft > 0){
+      autoSpinsLeft--;
+      updateAutoBtn();
+      if(autoSpinsLeft > 0 && credits >= bet) setTimeout(doSpin, 900);
+      else { autoSpinsLeft = 0; updateAutoBtn(); }
+    }
+  }
+
+  function openVault(){
+    vaultsOpened++;
+    els.vaultModal.classList.add('show');
+    els.vaultResult.textContent = 'Choose a cache.';
+    const prizes = [bet * 3, bet * 5, bet * 10, bet * 15, bet * 25, 0];
+    prizes.sort(()=>Math.random()-.5);
+    els.vaultGrid.innerHTML = '';
+    [...Array(6)].forEach((_,i)=>{
+      const b = document.createElement('button');
+      b.className = 'vault-pick'; b.textContent = '▣';
+      b.addEventListener('click', ()=>{
+        if(b.disabled) return;
+        [...els.vaultGrid.children].forEach(x=>x.disabled = true);
+        const prize = prizes[i];
+        b.classList.add('revealed'); b.textContent = prize ? `+${prize}` : 'VOID';
+        credits += prize;
+        if(prize){ recentWins.push({amount:prize,mode:'VAULT'}); recentWins.sort((a,b)=>b.amount-a.amount); recentWins = recentWins.slice(0,5); winSound(prize >= bet*10); }
+        else loseSound();
+        els.vaultResult.textContent = prize ? `SIGNAL CACHE: +${prize}` : 'THE RIFT ATE IT.';
+        if(vaultsOpened >= 3) unlock('vault-three', 'VAULT RAT');
+        renderRecords(); refreshStats();
+        setTimeout(()=>{ els.vaultModal.classList.remove('show'); continueRound(); }, 1100);
+      }, {once:true});
+      els.vaultGrid.appendChild(b);
+    });
+  }
+
+  function evaluate(results, wasFreeSpin){
+    spinning = false;
+    els.spinBtn.disabled = false;
+    els.lever.classList.remove('pulled');
+
+    const [a,b,c] = results;
+    const allThree = matches(a,b) && matches(b,c) && matches(a,c);
+    const anyPair = matches(a,b) || matches(b,c) || matches(a,c);
+    const multiplier = (wasFreeSpin ? 2 : 1) * streakMultiplier();
+
+    let win = 0;
+    let triggeredFree = false;
+
+    if(allThree){
+      // resolve which real symbol the line pays as (wilds don't have their own payout)
+      const real = [a,b,c].find(s => s !== WILD) || a;
+      win = Math.floor(bet * (cfg().payouts[real] || 2) * multiplier);
+      if(real === "🍀"){
+        freeSpins += 5;
+        triggeredFree = true;
+      }
+      reelDivs.forEach(r => r.classList.add('winning'));
+    } else if(anyPair){
+      const pairSym = matches(a,b) ? (a!==WILD?a:b) : (matches(b,c) ? (b!==WILD?b:c) : (a!==WILD?a:c));
+      win = Math.floor(bet * ((cfg().payouts[pairSym] || 2) * 0.2) * multiplier);
+    }
+
+    const chargeHits = results.filter(s => s === '⚡').length;
+    if(chargeHits) reactorCharge = Math.min(5, reactorCharge + chargeHits);
+    let cashedOvercharge = false;
+    if(win > 0 && overcharged){ win *= 2; overcharged = false; reactorCharge = 0; cashedOvercharge = true; unlock('overcharge', 'LIVE WIRE'); }
+    if(reactorCharge >= 5 && !overcharged){ overcharged = true; setMessage('⚡ REACTOR OVERCHARGED — NEXT WIN 2x ⚡'); }
+
+    credits += win;
+    if(win > bestWin) bestWin = win;
+    document.getElementById('lastWin').textContent = win;
+    refreshStats();
+
+    if(win > 0){
+      streak++;
+      maxStreak = Math.max(maxStreak, streak);
+      if(streak >= 5) unlock('streak-five', 'HOT HAND');
+      const big = win >= bet * 10;
+      if(big){ jackpotSound(); screenShake(); confettiBurst(); showBanner(`+${win} // ${streak} STREAK`); els.cabinet.classList.add('jackpot'); setTimeout(()=>els.cabinet.classList.remove('jackpot'), 1500); unlock('first-big', 'FIRST BLOOD'); }
+      else winSound(false);
+      if(mode === 'high' && results.includes('👑')) unlock('high-crown', 'CROWNED');
+      recentWins.push({amount:win,mode:mode === 'high' ? 'HR' : 'LS'});
+      recentWins.sort((x,y)=>y.amount-x.amount); recentWins = recentWins.slice(0,5);
+      let msg = big ? `★ JACKPOT-ISH! +${win} ★` : `WIN +${win}`;
+      if(triggeredFree) msg = `🍀 FREE SPINS +5! ${msg}`;
+      if(cashedOvercharge) msg = `⚡ OVERCHARGE CASHED! ${msg}`;
+      setMessage(msg);
+    } else {
+      streak = 0;
+      loseSound();
+      setMessage(freeSpins > 0 ? `NO WIN — ${freeSpins} FREE SPINS LEFT` : 'NO WIN — SPIN AGAIN');
+    }
+
+    if(credits <= 0 && freeSpins === 0){
+      setMessage('OUT OF CREDITS — HIT RESET');
+    }
+
+    renderRecords();
+    const scatters = results.filter(s => s === '🛸').length;
+    if(scatters >= 2){ setMessage('🛸 SIGNAL VAULT OPENED'); setTimeout(openVault, 500); }
+    else continueRound();
+  }
+
+  function updateAutoBtn(){
+    if(autoSpinsLeft > 0){
+      els.autoBtn.textContent = `STOP (${autoSpinsLeft} LEFT)`;
+      els.autoBtn.classList.add('auto');
+    } else {
+      els.autoBtn.textContent = 'AUTOPLAY x10';
+      els.autoBtn.classList.remove('auto');
+    }
+  }
+
+  function switchMode(){
+    if(spinning || freeSpins > 0) return;
+    mode = mode === 'normal' ? 'high' : 'normal';
+    bet = Math.max(cfg().min, Math.min(cfg().max, bet));
+    reelEls.forEach(strip => { strip.innerHTML = `<div class="sym">${weightedSymbol()}</div>`; });
+    setMessage(mode === 'high' ? 'HIGH ROLLER: VOLTAGE UP' : 'LUCKY STRIKE: CLASSIC ODDS');
+    clickSound(); refreshStats();
+  }
+  function resetIdle(){
+    document.body.classList.remove('attract');
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(()=>{
+      if(!spinning && !els.payModal.classList.contains('show') && !els.vaultModal.classList.contains('show')){
+        document.body.classList.add('attract');
+        setMessage('INSERT IMAGINARY COINS // SPACE TO SPIN');
+      }
+    }, 12000);
+  }
+
+  els.spinBtn.addEventListener('click', doSpin);
+  els.lever.addEventListener('click', doSpin);
+  els.betUp.addEventListener('click', () => { resetIdle(); clickSound(); bet = Math.min(cfg().max, bet + BET_STEP); refreshStats(); });
+  els.betDown.addEventListener('click', () => { resetIdle(); clickSound(); bet = Math.max(cfg().min, bet - BET_STEP); refreshStats(); });
+  els.maxBtn.addEventListener('click', () => { resetIdle(); clickSound(); bet = Math.min(cfg().max, credits > 0 ? Math.min(cfg().max, credits) : cfg().max); refreshStats(); });
+
+  els.autoBtn.addEventListener('click', () => {
+    if(autoSpinsLeft > 0){
+      autoSpinsLeft = 0;
+      updateAutoBtn();
+      setMessage('AUTOPLAY STOPPED');
+      return;
+    }
+    autoSpinsLeft = 10;
+    updateAutoBtn();
+    if(!spinning) doSpin();
+  });
+
+  els.resetBtn.addEventListener('click', () => {
+    credits = 100; bet = cfg().min; bestWin = 0; freeSpins = 0; autoSpinsLeft = 0; streak = 0; maxStreak = 0; reactorCharge = 0; overcharged = false; recentWins = [];
+    updateAutoBtn();
+    refreshStats();
+    renderRecords();
+    setMessage('CREDITS RESET TO 100');
+  });
+  els.creditBtn.addEventListener('click', () => els.resetBtn.click());
+
+  els.muteBtn.addEventListener('click', () => {
+    muted = !muted;
+    els.muteBtn.textContent = muted ? '🔇' : '🔊';
+    save();
+  });
+  els.muteBtn.textContent = muted ? '🔇' : '🔊';
+
+  els.modeBtn.addEventListener('click', switchMode);
+  els.modeWideBtn.addEventListener('click', switchMode);
+  els.payBtn.addEventListener('click', () => { renderRecords(); els.payModal.classList.add('show'); });
+  els.closePayModal.addEventListener('click', () => { els.payModal.classList.remove('show'); resetIdle(); });
+  els.payModal.addEventListener('click', (e) => { if(e.target === els.payModal){ els.payModal.classList.remove('show'); resetIdle(); } });
+
+  document.addEventListener('keydown', (e) => {
+    if(e.code === 'Space'){
+      e.preventDefault();
+      if(!els.payModal.classList.contains('show')) doSpin();
+    }
+  });
+  document.addEventListener('pointerdown', resetIdle);
+
+  // init reels with a static idle symbol each
+  reelEls.forEach(strip => {
+    const sym = weightedSymbol();
+    strip.innerHTML = `<div class="sym">${sym}</div>`;
+  });
+
+  refreshStats();
+  renderRecords();
+  resetIdle();
+})();
+</script>
+</body>
+</html>
