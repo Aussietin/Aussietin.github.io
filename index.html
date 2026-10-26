@@ -108,7 +108,7 @@ footer a{color:var(--dim);margin-right:24px}
 
 @media (max-width:900px){
   .wrap{padding:0 16px}
-  .mast nav a{margin-left:16px}
+  .mast nav a{margin-left:16px;display:inline-block;padding:8px 0}
   .mast nav a.hide-sm{display:none}
   .hero{padding:72px 0 56px}
   .lede{grid-template-columns:1fr;gap:20px;margin-top:40px}
@@ -123,6 +123,9 @@ footer a{color:var(--dim);margin-right:24px}
   .index li{grid-template-columns:1fr auto;gap:6px 12px}
   .index li span{grid-column:1/-1;order:3}
   .term{font-size:12px;padding:16px}
+}
+@media (max-width:480px){
+  .term{font-size:clamp(9px,2.6vw,11px);padding:14px 12px}
 }
 
 .hero-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:56px;align-items:start}
@@ -168,21 +171,21 @@ figure img,figure video{display:block;width:100%;height:auto;aspect-ratio:16/10;
       <div class="cta"><a class="primary" href="#play">Try a browser toy</a><a href="https://github.com/Aussietin">Read the code</a></div>
     </div>
     <figure>
-      <pre class="plate term" tabindex="0" role="img" aria-label="Real output from nethealth check google.com: DNS ok, ping failed, HTTP 301 ok, ports 80 and 443 open, 3 of 4 checks passed, with a plain-English summary">┌────────────────┐
+      <pre class="plate term" tabindex="0" role="img" aria-label="Real output from nethealth check google.com on Linux: DNS 115 ms, ping 70 ms average, HTTP 301, ports 80 and 443 open, traceroute 6 hops, 5 of 5 checks passed, internet working normally">╭────────────────╮
 │ 🔎  google.com │
-└────────────────┘
+╰────────────────╯
 
  Check            Status         Detail
- ───────────────────────────────────────────────────
- DNS              ✅  OK         6788.2ms
- Ping             ❌  FAIL       Ping failed
- HTTP             ✅  OK         HTTP 301  ·  6193ms
+ ──────────────────────────────────────────────────
+ DNS              ✅  OK         115.1ms
+ Ping             ✅  OK         70.2ms avg
+ HTTP             ✅  OK         HTTP 301  ·  840ms
  Port             ✅  OK         open: 80, 443
+ Traceroute       ✅  OK         6 hops
 
-  ⚠️   3/4 checks passed
-  Your internet is working, but a little slower than usual —
-web-address lookups are slow (6788 ms).</pre>
-      <figcaption><span>nethealth check google.com</span><span>real output, 2026-10-26</span></figcaption>
+  ✅  5/5 checks passed
+  Your internet is working normally.</pre>
+      <figcaption><span>nethealth check google.com</span><span>real output, Linux, 2026-10-26</span></figcaption>
     </figure>
   </div>
 </section>
@@ -204,21 +207,21 @@ web-address lookups are slow (6788 ms).</pre>
       <div class="meta"><span class="state s-pub">public on GitHub</span><a href="https://github.com/Aussietin/nethealth">read the code</a></div>
     </div>
     <figure>
-      <pre class="plate term" tabindex="0" role="img" aria-label="Real output from nethealth check example.com: DNS ok, ping failed, HTTP 200 ok, ports 80 and 443 open, 3 of 4 checks passed">┌─────────────────┐
+      <pre class="plate term" tabindex="0" role="img" aria-label="Real output from nethealth check example.com on Linux: DNS 146 ms, ping 66 ms average, HTTP 200, ports 80 and 443 open, traceroute 10 hops, 5 of 5 checks passed, internet working normally">╭─────────────────╮
 │ 🔎  example.com │
-└─────────────────┘
+╰─────────────────╯
 
  Check            Status         Detail
- ───────────────────────────────────────────────────
- DNS              ✅  OK         6175.3ms
- Ping             ❌  FAIL       Ping failed
- HTTP             ✅  OK         HTTP 200  ·  3588ms
+ ──────────────────────────────────────────────────
+ DNS              ✅  OK         145.6ms
+ Ping             ✅  OK         65.9ms avg
+ HTTP             ✅  OK         HTTP 200  ·  920ms
  Port             ✅  OK         open: 80, 443
+ Traceroute       ✅  OK         10 hops
 
-  ⚠️   3/4 checks passed
-  Your internet is working, but a little slower than usual —
-web-address lookups are slow (6175 ms).</pre>
-      <figcaption><span>nethealth check example.com / real output, 2026-10-26</span><span>fig. 1</span></figcaption>
+  ✅  5/5 checks passed
+  Your internet is working normally.</pre>
+      <figcaption><span>nethealth check example.com / real output, Linux, 2026-10-26</span><span>fig. 1</span></figcaption>
     </figure>
   </article>
 
